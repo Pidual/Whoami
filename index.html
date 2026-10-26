@@ -112,8 +112,9 @@
   /* boot log */
   .boot { margin: 0 0 64px; }
   .boot ol { list-style: none; margin: 0; padding: 16px 18px; font-size: .85rem; line-height: 1.9; }
-  .boot li { display: grid; grid-template-columns: 8.5ch 1fr; gap: 10px; }
-  .boot li > span:first-child { white-space: pre; }
+  .boot li { display: flex; align-items: baseline; gap: 10px; }
+  .boot li > span:first-child { white-space: pre; flex: 0 0 auto; min-width: 8ch; }
+  .boot li > span:last-child { flex: 1 1 auto; min-width: 0; }
   .boot .ok { color: var(--green); font-weight: 700; }
   .boot .run { color: var(--blue); font-weight: 700; }
   .boot .wait { color: var(--orange); font-weight: 700; }
@@ -391,34 +392,34 @@
   <section id="projects">
     <div class="wrap">
       <h2 class="glow"><span class="p">~/</span><span class="en">projects</span><span class="es">proyectos</span><span class="ru">проекты</span></h2>
-      <p class="sub"><span class="en">Things I built because I wanted to.</span><span class="es">Cosas que construí porque quise.</span><span class="ru">То, что я сделал, потому что захотелось.</span></p>
+      <p class="sub"><span class="en">Stuff I've built while learning.</span><span class="es">Cosas que he construido aprendiendo.</span><span class="ru">То, что я сделал, пока учился.</span></p>
       <div class="projects">
         <article class="card">
           <h3><span class="en">Security homelab</span><span class="es">Homelab de seguridad</span><span class="ru">Домашняя лаборатория безопасности</span></h3>
-          <p class="en">Proxmox VE on bare metal with an OPNsense firewall, VLAN segmentation, port and protocol rules, and VPN access. Windows and Linux VMs, a basic Active Directory, logs centralized in the ELK Stack, vulnerability scans with Nessus and OpenVAS, and testing with Kali, Metasploit, Wireshark and Nmap.</p>
-          <p class="es">Proxmox VE en bare metal con firewall OPNsense, segmentación por VLAN, reglas por puerto y protocolo y acceso VPN. VMs Windows y Linux, un Active Directory básico, logs centralizados en ELK Stack, escaneo de vulnerabilidades con Nessus y OpenVAS, y pruebas con Kali, Metasploit, Wireshark y Nmap.</p>
-          <p class="ru">Proxmox VE на голом железе с межсетевым экраном OPNsense, сегментацией VLAN, правилами по портам и протоколам и VPN-доступом. ВМ на Windows и Linux, базовый Active Directory, централизованные логи в ELK Stack, сканирование уязвимостей в Nessus и OpenVAS, тестирование с Kali, Metasploit, Wireshark и Nmap.</p>
+          <p class="en">A small lab at home where I practice security: Proxmox, OPNsense, VLANs, ELK and Nessus scans.</p>
+          <p class="es">Un pequeño laboratorio en casa para practicar seguridad: Proxmox, OPNsense, VLANs, ELK y escaneos con Nessus.</p>
+          <p class="ru">Небольшая домашняя лаборатория, где я практикую безопасность: Proxmox, OPNsense, VLAN, ELK и сканирование Nessus.</p>
           <p class="stack"><b>2026</b> · Proxmox, OPNsense, ELK, Nessus, Kali</p>
         </article>
         <article class="card">
           <h3><a href="https://github.com/Pidual/Photo-Deletor-Extension" target="_blank" rel="noopener">Photo-Deletor-Extension</a></h3>
-          <p class="en">A browser extension that runs an image classifier right inside Google Photos. I fine-tuned ResNet50 in PyTorch on more than 17,000 images I labeled by hand, exported it to ONNX, and made it run in the browser.</p>
-          <p class="es">Una extensión de navegador que ejecuta un clasificador de imágenes directamente en Google Photos. Hice fine-tuning de ResNet50 en PyTorch con más de 17.000 imágenes que etiqueté a mano, lo exporté a ONNX y lo puse a correr en el navegador.</p>
-          <p class="ru">Расширение для браузера, которое запускает классификатор изображений прямо в Google Photos. Дообучил ResNet50 на PyTorch на более чем 17 000 изображений, размеченных вручную, экспортировал в ONNX и запустил в браузере.</p>
+          <p class="en">An extension that helps clean up Google Photos. I trained a ResNet50 model on about 17k photos I labeled by hand.</p>
+          <p class="es">Una extensión que ayuda a limpiar Google Fotos. Entrené un modelo ResNet50 con unas 17 mil fotos que etiqueté a mano.</p>
+          <p class="ru">Расширение, которое помогает чистить Google Фото. Обучил модель ResNet50 примерно на 17 000 фото, размеченных вручную.</p>
           <p class="stack"><b>2026</b> · PyTorch, CUDA, ONNX, JavaScript</p>
         </article>
         <article class="card">
           <h3><span class="en">E-commerce backend</span><span class="es">Backend de e-commerce</span><span class="ru">Бэкенд интернет-магазина</span></h3>
-          <p class="en">REST API with JWT authentication, product catalog, cart and orders.</p>
-          <p class="es">API REST con autenticación JWT, catálogo de productos, carrito y pedidos.</p>
-          <p class="ru">REST API с JWT-аутентификацией, каталогом товаров, корзиной и заказами.</p>
+          <p class="en">An online store backend I built to learn Spring Boot: JWT login, products, cart and orders.</p>
+          <p class="es">Backend de una tienda online para aprender Spring Boot: login con JWT, productos, carrito y pedidos.</p>
+          <p class="ru">Бэкенд интернет-магазина, чтобы изучить Spring Boot: вход по JWT, товары, корзина и заказы.</p>
           <p class="stack"><b>2024</b> · Java, Spring Boot, JWT</p>
         </article>
         <article class="card">
           <h3><span class="en">1st place, UPTC Hackathon</span><span class="es">1.er puesto, Hackatón UPTC</span><span class="ru">1-е место, хакатон UPTC</span></h3>
-          <p class="en">Won the hackathon at Universidad Pedagógica y Tecnológica de Colombia.</p>
-          <p class="es">Gané la hackatón de la Universidad Pedagógica y Tecnológica de Colombia.</p>
-          <p class="ru">Победа на хакатоне Педагогического и технологического университета Колумбии (UPTC).</p>
+          <p class="en">First place at the UPTC hackathon. Great experience.</p>
+          <p class="es">Primer puesto en la hackatón de la UPTC. Muy buena experiencia.</p>
+          <p class="ru">Первое место на хакатоне UPTC. Отличный опыт.</p>
           <p class="stack"><b><span class="en">May 2026</span><span class="es">may 2026</span><span class="ru">май 2026</span></b> · <span class="en">award</span><span class="es">premio</span><span class="ru">награда</span></p>
         </article>
       </div>
