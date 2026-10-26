@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carlos Lozano</title>
+<meta name="description" content="Carlos Lozano, Information Security Analyst. ISO 27001, SOC 2, compliance automation and security labs. Based in Colombia.">
+<meta property="og:title" content="Carlos Lozano, Information Security Analyst">
+<meta property="og:description" content="ISO 27001 and SOC 2 compliance, audit automation, AWS and homelab security work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #010803;
+    --panel: rgba(2, 18, 7, .86);
+    --green: #3dff7a;
+    --text: #b9f5c9;
+    --dim: #4f9c64;
+    --line: #0f4a22;
+    --orange: #ff9a1f;
+    --red: #ff5c5c;
+    --blue: #6fd6ff;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 15px/1.75 var(--mono);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .3s;
+  }
+  /* language switching */
+  html:not([lang="en"]) .en, html:not([lang="es"]) .es, html:not([lang="ru"]) .ru { display: none !important; }
+
+  #rain { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .5; pointer-events: none; transition: opacity .4s; }
+  html.norain #rain { opacity: 0; }
+  .scan { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.18) 3px); }
+  .bar, main, footer { position: relative; z-index: 2; }
+
+  a { color: var(--green); text-underline-offset: 3px; }
+  a:hover { color: #fff; text-shadow: 0 0 8px var(--green); }
+  :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+  ::selection { background: var(--green); color: var(--bg); }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  .glow { color: var(--green); text-shadow: 0 0 6px color-mix(in srgb, var(--green) 60%, transparent), 0 0 22px color-mix(in srgb, var(--green) 25%, transparent); }
+
+  /* ---------- waybar ---------- */
+  .bar { position: sticky; top: 0; z-index: 10; padding: 8px 10px 0; }
+  .bar-in { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 40px; padding: 0 6px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(8px); font-size: .8rem; }
+  .mod { display: flex; align-items: center; gap: 4px; }
+  .ws a { text-decoration: none; color: var(--dim); padding: 3px 9px; border-radius: 6px; white-space: nowrap; }
+  .ws a .lbl { margin-left: 5px; }
+  .ws a:hover { color: var(--green); text-shadow: none; background: color-mix(in srgb, var(--green) 10%, transparent); }
+  .ws a.on { background: var(--green); color: var(--bg); font-weight: 700; }
+  .mid { color: var(--text); white-space: nowrap; }
+  .mid .dot { color: var(--orange); }
+  .cava { display: flex; align-items: flex-end; gap: 2px; height: 16px; margin-right: 6px; }
+  .cava i { width: 3px; height: 30%; background: var(--green); border-radius: 1px; animation: eq 1s ease-in-out infinite alternate; }
+  .cava i:nth-child(2n) { animation-duration: .7s; } .cava i:nth-child(3n) { animation-duration: 1.3s; } .cava i:nth-child(4n) { animation-duration: .55s; } .cava i:nth-child(5n) { animation-duration: .9s; }
+  @keyframes eq { from { height: 15%; } to { height: 100%; } }
+  .pill { font: 700 .75rem var(--mono); background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; cursor: pointer; white-space: nowrap; }
+  .pill:hover { border-color: var(--green); color: var(--green); }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .lang button { font: 700 .75rem var(--mono); background: transparent; color: var(--dim); border: 0; padding: 4px 8px; cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: var(--green); color: var(--bg); }
+  @media (max-width: 1060px) { .ws a .lbl { display: none; } }
+  @media (max-width: 760px) { .mid, .cava { display: none; } .ws a { padding: 3px 6px; } }
+  @media (max-width: 520px) { .ws a:nth-child(n+6) { display: none; } .pill .tn { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 72px 0 44px; }
+  .prompt { color: var(--dim); margin: 0 0 10px; min-height: 1.75em; }
+  .prompt b { color: var(--green); font-weight: 500; }
+  .typed::after { content: "█"; color: var(--green); animation: blink 1s steps(1) infinite; margin-left: 2px; }
+  .typed.done::after { content: none; }
+  h1 { font-size: clamp(2.8rem, 7vw, 5.2rem); line-height: .95; letter-spacing: -.04em; margin: 0 0 18px; font-weight: 800; }
+  .role { color: var(--orange); font-weight: 700; margin: 0 0 16px; font-size: 1.05rem; }
+  .intro { max-width: 36em; margin: 0 0 28px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 10px; font-weight: 700; font-size: .9rem; }
+  .btn { display: inline-block; padding: 10px 18px; border: 1px solid var(--green); text-decoration: none; color: var(--green); background: color-mix(in srgb, var(--green) 4%, transparent); }
+  .btn:hover { background: var(--green); color: var(--bg); text-shadow: none; }
+  .btn.primary { background: var(--green); color: var(--bg); }
+  .btn.primary:hover { background: #fff; border-color: #fff; }
+
+  /* ---------- terminal windows ---------- */
+  .term { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--green) 8%, transparent), 0 0 40px color-mix(in srgb, var(--green) 8%, transparent); }
+  .term .tbar { display: flex; gap: 7px; align-items: center; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: .78rem; color: var(--dim); }
+  .term .tbar i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .term .tbar i:nth-child(1) { background: var(--red); } .term .tbar i:nth-child(2) { background: var(--orange); } .term .tbar i:nth-child(3) { background: var(--green); }
+  .term .tbar span { margin-left: auto; }
+
+  .fetch { display: grid; grid-template-columns: auto 1fr; gap: 22px; padding: 18px 18px 20px; align-items: start; font-size: .78rem; line-height: 1.5; }
+  .face { margin: 0; color: var(--orange); text-shadow: 0 0 10px color-mix(in srgb, var(--orange) 45%, transparent); font: 700 .78rem/1.2 var(--mono); white-space: pre; cursor: pointer; user-select: none; border-radius: 6px; }
+  .face:hover { filter: brightness(1.2); }
+  .facehint { color: var(--dim); font-size: .7rem; text-align: center; margin-top: 6px; }
+  .info { margin: 0; white-space: pre-wrap; }
+  .info .k { color: var(--orange); font-weight: 700; }
+  .info .u { color: var(--green); font-weight: 700; }
+  .swatches { display: flex; margin-top: 10px; }
+  .swatches span { width: 22px; height: 14px; }
+  @media (max-width: 920px) { .hero { grid-template-columns: 1fr; padding-top: 44px; } }
+  @media (max-width: 480px) { .fetch { grid-template-columns: 1fr; } .facewrap { justify-self: center; } }
+
+  /* boot log */
+  .boot { margin: 0 0 64px; }
+  .boot ol { list-style: none; margin: 0; padding: 16px 18px; font-size: .85rem; line-height: 1.9; }
+  .boot li { display: grid; grid-template-columns: 7.5ch 1fr; gap: 10px; }
+  .boot .ok { color: var(--green); font-weight: 700; }
+  .boot .run { color: var(--blue); font-weight: 700; }
+  .boot .wait { color: var(--orange); font-weight: 700; }
+  .boot li a { color: var(--dim); }
+  .boot li a:hover { color: var(--green); }
+  @media (prefers-reduced-motion: no-preference) {
+    .boot li { opacity: 0; animation: line .01s linear forwards; animation-delay: calc(1.4s + var(--i) * .28s); }
+    @keyframes line { to { opacity: 1; } }
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 60px 0; }
+  h2 { font-size: 1.6rem; margin: 0 0 28px; letter-spacing: -.02em; font-weight: 800; }
+  h2 .p { color: var(--dim); font-weight: 400; }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; color: var(--text); filter: brightness(1.15); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 26px; }
+  .prose { max-width: 70ch; }
+  .prose p:first-child { margin-top: 0; } .prose p:last-child { margin-bottom: 0; }
+  .sub { color: var(--dim); margin: -20px 0 26px; font-size: .88rem; }
+
+  .job { padding-left: 22px; border-left: 2px solid var(--line); position: relative; padding-bottom: 40px; }
+  .job:last-child { padding-bottom: 0; }
+  .job::before { content: ">"; position: absolute; left: -7px; top: -1px; background: var(--panel); color: var(--green); font-weight: 800; line-height: 1.5; }
+  .meta { color: var(--dim); font-size: .85rem; margin: 0 0 12px; }
+  .job ul { margin: 0; padding: 0; list-style: none; max-width: 75ch; }
+  .job li { padding-left: 2ch; text-indent: -2ch; margin-bottom: 6px; }
+  .job li::before { content: "- "; color: var(--green); }
+  .figures { display: flex; flex-wrap: wrap; margin: 18px 0; border: 1px dashed var(--line); max-width: 75ch; }
+  .figures div { flex: 1 1 150px; padding: 14px 16px; border-right: 1px dashed var(--line); }
+  .figures div:last-child { border-right: 0; }
+  .figures b { display: block; font-size: 1.8rem; line-height: 1; margin-bottom: 6px; }
+  .figures span { color: var(--dim); font-size: .8rem; line-height: 1.35; display: block; }
+
+  .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .projects article p { margin: 8px 0 12px; }
+  .stack { color: var(--dim); font-size: .8rem; margin: 0 !important; }
+  .stack b { color: var(--orange); font-weight: 700; }
+
+  .certs { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .certs th { text-align: left; color: var(--dim); font-weight: 500; padding: 0 12px 8px 0; border-bottom: 1px solid var(--green); }
+  .certs td { padding: 11px 12px 11px 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
+  .certs td.when { white-space: nowrap; color: var(--dim); }
+  @media (max-width: 720px) {
+    .certs thead { display: none; }
+    .certs tr { display: block; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+    .certs td { display: block; padding: 1px 0; border: 0; }
+  }
+  .degree { color: var(--dim); font-size: .85rem; margin: 16px 0 0; }
+
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 26px 36px; }
+  .skills h3 { color: var(--orange); filter: none; font-size: .95rem; margin-bottom: 8px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; font-size: .8rem; }
+  .tags li { padding: 2px 9px; border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--green) 3%, transparent); }
+
+  /* battlestation */
+  .rig { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 860px) { .rig { grid-template-columns: 1fr; } }
+  .tree { margin: 0; padding: 18px 20px; font-size: .84rem; line-height: 1.85; overflow-x: auto; }
+  .tree .root { color: var(--green); font-weight: 700; }
+  .tree .br { color: var(--dim); }
+  .tree .k { color: var(--orange); display: inline-block; min-width: 8ch; font-weight: 700; }
+  .tree .row { white-space: pre; border-radius: 4px; }
+  .tree .row:hover { background: color-mix(in srgb, var(--green) 8%, transparent); }
+  .steam { padding: 22px; }
+  .steam h3 { margin-bottom: 4px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 16px 0; border: 1px dashed var(--line); }
+  .stats div { padding: 12px 10px; border-right: 1px dashed var(--line); text-align: center; }
+  .stats div:last-child { border-right: 0; }
+  .stats b { display: block; font-size: 1.5rem; line-height: 1.1; }
+  .stats span { color: var(--dim); font-size: .72rem; }
+  .np { font-size: .82rem; color: var(--dim); margin: 0 0 16px; }
+  .np b { color: var(--text); }
+  .asof { color: var(--dim); font-size: .7rem; margin: 10px 0 0; }
+
+  /* shell */
+  .shell .out { height: 300px; overflow-y: auto; padding: 14px 18px 4px; font-size: .84rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .shell .out .cmd { color: var(--green); }
+  .shell .out .err { color: var(--red); }
+  .shell .out .note { color: var(--orange); }
+  .shell form { display: flex; gap: 8px; align-items: center; padding: 8px 18px 14px; font-size: .84rem; }
+  .shell form label { color: var(--green); white-space: nowrap; }
+  .shell input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--text); font: inherit; caret-color: var(--green); outline: none; }
+  .shell form:focus-within { box-shadow: inset 0 1px 0 var(--line); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 16px; }
+  .chips button { font: 500 .75rem var(--mono); background: transparent; color: var(--dim); border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+  .chips button:hover { color: var(--green); border-color: var(--green); }
+
+  .contact h2 { font-size: clamp(1.8rem, 4.5vw, 3rem); max-width: 22ch; line-height: 1.15; }
+  .contact p { max-width: 60ch; }
+  footer { color: var(--dim); font-size: .78rem; padding: 24px 0 36px; border-top: 1px solid var(--line); }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .typed::after, .cava i { animation: none; } .cava i { height: 50%; } }
+</style>
+</head>
+<body>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="scan" aria-hidden="true"></div>
+
+<!-- ======================= WAYBAR ======================= -->
+<header class="bar">
+  <nav class="bar-in" aria-label="Main">
+    <div class="mod ws" id="ws">
+      <a href="#top" data-sec="top">1<span class="lbl">~</span></a>
+      <a href="#about" data-sec="about">2<span class="lbl"><span class="en">about</span><span class="es">sobre_mí</span><span class="ru">обо_мне</span></span></a>
+      <a href="#experience" data-sec="experience">3<span class="lbl"><span class="en">exp</span><span class="es">exp</span><span class="ru">опыт</span></span></a>
+      <a href="#projects" data-sec="projects">4<span class="lbl"><span class="en">projects</span><span class="es">proyectos</span><span class="ru">проекты</span></span></a>
+      <a href="#certifications" data-sec="certifications">5<span class="lbl">certs</span></a>
+      <a href="#rig" data-sec="rig">6<span class="lbl">rig</span></a>
+      <a href="#shell" data-sec="shell">7<span class="lbl">shell</span></a>
+      <a href="#contact" data-sec="contact">8<span class="lbl"><span class="en">contact</span><span class="es">contacto</span><span class="ru">контакты</span></span></a>
+    </div>
+    <div class="mid" aria-live="off"><span id="clock">--:--</span> <span class="dot">●</span> Yopal, CO</div>
+    <div class="mod">
+      <div class="cava" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="pill" id="themeBtn" type="button" aria-label="Change color theme">󰏘 <span class="tn" id="themeName">matrix</span></button>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+        <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- ======================= HERO ======================= -->
+  <div class="wrap hero" id="top">
+    <div>
+      <p class="prompt"><b>carlos@yopal</b>:~$ <span class="typed" id="typed"></span></p>
+      <h1 class="glow">Carlos<br>Lozano</h1>
+      <p class="role"><span class="en">// Information Security Analyst</span><span class="es">// Analista de Seguridad de la Información</span><span class="ru">// Аналитик по информационной безопасности</span></p>
+      <p class="intro en">I keep security programs audit-ready. ISO 27001 and SOC 2 compliance by day, automation that makes evidence collection less painful, and a homelab where I break things on purpose. Systems and Computer Engineer from Colombia.</p>
+      <p class="intro es">Mantengo los programas de seguridad listos para auditoría. De día, cumplimiento de ISO 27001 y SOC 2 y automatización que hace menos dolorosa la recolección de evidencias; en casa, un homelab donde rompo cosas a propósito. Ingeniero de Sistemas y Computación de Colombia.</p>
+      <p class="intro ru">Слежу за тем, чтобы программы безопасности всегда были готовы к аудиту. Днём — соответствие ISO 27001 и SOC 2 и автоматизация, которая делает сбор доказательств менее мучительным, а дома — лаборатория, где я ломаю всё нарочно. Инженер по системам и вычислительной технике из Колумбии.</p>
+      <div class="btns">
+        <a class="btn primary" href="mailto:carlosmapache1@gmail.com"><span class="en">./email_me</span><span class="es">./escríbeme</span><span class="ru">./написать</span></a>
+        <a class="btn" href="https://www.linkedin.com/in/carloslozanoperez/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Pidual" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+
+    <div class="term" aria-label="System info, neofetch style">
+      <div class="tbar"><i></i><i></i><i></i><span>~ — fastfetch</span></div>
+      <div class="fetch">
+        <div class="facewrap">
+<pre class="face" id="face" role="button" tabindex="0" aria-label="Mascot. Click to change its mood.">    .-''''''''-.
+  .'            '.
+ /    <span class="eye">O</span>      <span class="eye">O</span>    \
+|        /\        |
+|   \__________/   |
+ \    \______/    /
+  '.            .'
+    '-........-'
+       |    |
+     __|    |__</pre>
+          <div class="facehint"><span class="en">click me</span><span class="es">hazme clic</span><span class="ru">нажми</span></div>
+        </div>
+        <div>
+<pre class="info"><span class="u">carlos</span>@<span class="u">yopal</span>
+-------------
+<span class="k">OS</span>:      Arch Linux x86_64
+<span class="k">Host</span>:    Gigabyte B650 EAGLE AX
+<span class="k">CPU</span>:     Ryzen 7 7800X3D
+<span class="k">GPU</span>:     GeForce RTX 5070 12GB
+<span class="k">Memory</span>:  32 GB DDR5-6000
+<span class="k">Display</span>: 2560x1440 @ 240Hz OLED
+<span class="k">Theme</span>:   <span id="fetchTheme">matrix</span>
+<span class="k">Role</span>:    <span class="en">InfoSec Analyst</span><span class="es">Analista de Seguridad</span><span class="ru">Аналитик ИБ</span>
+<span class="k">Cert</span>:    Security+ SY0-701
+<span class="k">Mood</span>:    <span id="mood">focused</span></pre>
+          <div class="swatches" aria-hidden="true" id="swatches"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="term boot" aria-label="Verified facts with evidence links">
+      <ol>
+        <li style="--i:0"><span class="ok">[  OK  ]</span><span><span class="en">Verified CompTIA Security+ (SY0-701)</span><span class="es">Verificado CompTIA Security+ (SY0-701)</span><span class="ru">Подтверждён CompTIA Security+ (SY0-701)</span> · <a href="https://www.credly.com/badges/485adf76-e28e-4540-8a77-276ecb24b6d0/linked_in_profile" target="_blank" rel="noopener">credly</a></span></li>
+        <li style="--i:1"><span class="run">[ RUN  ]</span><span><span class="en">SOC 2 + ISO 27001 compliance at Profound</span><span class="es">Cumplimiento SOC 2 + ISO 27001 en Profound</span><span class="ru">Соответствие SOC 2 + ISO 27001 в Profound</span></span></li>
+        <li style="--i:2"><span class="ok">[  OK  ]</span><span><span class="en">Shipped SGSI+, ISO 27001 audit automation at Banco de Bogotá</span><span class="es">Desplegado SGSI+, automatización de auditoría ISO 27001 en el Banco de Bogotá</span><span class="ru">Запущен SGSI+, автоматизация аудита ISO 27001 в Banco de Bogotá</span></span></li>
+        <li style="--i:3"><span class="ok">[  OK  ]</span><span><span class="en">Loaded English module, level C2</span><span class="es">Cargado módulo de inglés, nivel C2</span><span class="ru">Загружен модуль английского, уровень C2</span> · <a href="https://cert.efset.org/en/hzQH9H" target="_blank" rel="noopener">ef set</a></span></li>
+        <li style="--i:4"><span class="ok">[  OK  ]</span><span><span class="en">39/39 AWS labs, 2nd place on the leaderboard (EPAM)</span><span class="es">39/39 laboratorios AWS, 2.º puesto en el ranking (EPAM)</span><span class="ru">39/39 лабораторных AWS, 2-е место в рейтинге (EPAM)</span></span></li>
+        <li style="--i:5"><span class="wait">[ WAIT ]</span><span><span class="en">EPAM AWS certificate, expected Dec 2026</span><span class="es">Certificado EPAM AWS, esperado en dic. 2026</span><span class="ru">Сертификат EPAM AWS, ожидается в декабре 2026</span></span></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ======================= ABOUT ======================= -->
+  <section id="about">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span><span class="en">about</span><span class="es">sobre_mí</span><span class="ru">обо_мне</span></h2>
+      <div class="card prose">
+        <div class="en">
+          <p>I studied Systems and Computer Engineering at UPTC in Tunja and fell into governance, risk and compliance during my internship at Banco de Bogotá, where the ISO 27001 audit process ran on spreadsheets and email chains. So I built a replacement. That project became my thesis and got a nod from the external auditor.</p>
+          <p>Now I work remotely for a US company, keeping SOC 2 and ISO 27001 controls on track, writing policies, and answering customer security questionnaires with Engineering, Legal and Product. Outside work I run a Proxmox homelab, train image models, rice my setup, play way too much Deadlock, and occasionally win hackathons.</p>
+          <p>Based in Yopal, Casanare. Remote is my favorite; hybrid or on-site anywhere in Colombia works too.</p>
+        </div>
+        <div class="es">
+          <p>Estudié Ingeniería de Sistemas y Computación en la UPTC, en Tunja, y caí en el mundo de gobierno, riesgo y cumplimiento (GRC) durante mi práctica en el Banco de Bogotá, donde la auditoría ISO 27001 funcionaba con hojas de cálculo y cadenas de correos. Así que construí un reemplazo. Ese proyecto se convirtió en mi tesis y recibió el reconocimiento del auditor externo.</p>
+          <p>Hoy trabajo en remoto para una empresa de EE. UU.: hago seguimiento a los controles de SOC 2 e ISO 27001, redacto políticas y respondo cuestionarios de seguridad de clientes junto a Ingeniería, Legal y Producto. Fuera del trabajo tengo un homelab en Proxmox, entreno modelos de imágenes, le hago rice a mi setup, juego demasiado Deadlock y de vez en cuando gano hackatones.</p>
+          <p>Vivo en Yopal, Casanare. Prefiero el remoto, pero también me sirve híbrido o presencial en cualquier ciudad de Colombia.</p>
+        </div>
+        <div class="ru">
+          <p>Я изучал системную и компьютерную инженерию в UPTC (Тунха), а в мир управления, рисков и соответствия (GRC) попал во время стажировки в Banco de Bogotá: там аудит по ISO 27001 держался на таблицах и цепочках писем. Я построил замену. Этот проект стал моей дипломной работой и получил признание внешнего аудитора.</p>
+          <p>Сейчас работаю удалённо на американскую компанию: слежу за контролями SOC 2 и ISO 27001, пишу политики и заполняю опросники клиентов по безопасности вместе с инженерами, юристами и продуктовой командой. В свободное время держу домашнюю лабораторию на Proxmox, обучаю модели распознавания изображений, украшаю свой сетап, слишком много играю в Deadlock и иногда выигрываю хакатоны.</p>
+          <p>Живу в Йопале, департамент Касанаре. Больше всего люблю удалёнку, но открыт к гибриду или офису в любом городе Колумбии.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= EXPERIENCE ======================= -->
+  <section id="experience">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span><span class="en">experience</span><span class="es">experiencia</span><span class="ru">опыт</span></h2>
+      <div class="card">
+        <article class="job">
+          <h3><span class="en">Information Security Analyst</span><span class="es">Analista de Seguridad de la Información</span><span class="ru">Аналитик по информационной безопасности</span></h3>
+          <p class="meta"><span class="en">Profound (via OperationsArmy) · remote, US company · Sep 2026 – present</span><span class="es">Profound (vía OperationsArmy) · remoto, empresa de EE. UU. · sep 2026 – actualidad</span><span class="ru">Profound (через OperationsArmy) · удалённо, компания из США · сен 2026 – н. в.</span></p>
+          <ul class="en">
+            <li>Support SOC 2 and ISO 27001 compliance: tracking controls, collecting evidence and assisting audits, with Vanta to monitor progress per framework.</li>
+            <li>Maintain and document security policies and procedures.</li>
+            <li>Gather and validate security information with Engineering, Legal and Product, fully in English.</li>
+            <li>Complete customer security questionnaires.</li>
+          </ul>
+          <ul class="es">
+            <li>Apoyo el cumplimiento de SOC 2 e ISO 27001: seguimiento de controles, recolección de evidencias y apoyo en auditorías, con Vanta para monitorear el avance por marco.</li>
+            <li>Mantengo y documento políticas y procedimientos de seguridad.</li>
+            <li>Recopilo y valido información de seguridad con Ingeniería, Legal y Producto, todo en inglés.</li>
+            <li>Respondo cuestionarios de seguridad de clientes.</li>
+          </ul>
+          <ul class="ru">
+            <li>Поддержка соответствия SOC 2 и ISO 27001: отслеживание контролей, сбор доказательств и помощь в аудитах; прогресс по каждому стандарту — в Vanta.</li>
+            <li>Ведение и документирование политик и процедур безопасности.</li>
+            <li>Сбор и проверка информации по безопасности вместе с инженерной, юридической и продуктовой командами — полностью на английском.</li>
+            <li>Заполнение опросников клиентов по безопасности.</li>
+          </ul>
+        </article>
+
+        <article class="job">
+          <h3><span class="en">Business Intern, Security &amp; Cybersecurity Center of Excellence</span><span class="es">Aprendiz Practicante Empresarial, Centro de Excelencia de Seguridad y Ciberseguridad</span><span class="ru">Стажёр (Business Intern), Центр компетенций по безопасности и кибербезопасности</span></h3>
+          <p class="meta"><span class="en">Banco de Bogotá · Bogotá · Jan 2025 – Jan 2026</span><span class="es">Banco de Bogotá · Bogotá · ene 2025 – ene 2026</span><span class="ru">Banco de Bogotá · Богота · янв 2025 – янв 2026</span></p>
+          <p class="en" style="margin:0;max-width:75ch">Designed and built <b class="glow">SGSI+</b> on Power Apps, Power Automate, SharePoint and Power BI to automate ISO/IEC 27001:2022 control and documentary audits, replacing a spreadsheet workflow.</p>
+          <p class="es" style="margin:0;max-width:75ch">Diseñé y construí <b class="glow">SGSI+</b> en Power Apps, Power Automate, SharePoint y Power BI para automatizar la auditoría de controles y documental de ISO/IEC 27001:2022, reemplazando un flujo basado en hojas de cálculo.</p>
+          <p class="ru" style="margin:0;max-width:75ch">Спроектировал и создал <b class="glow">SGSI+</b> на Power Apps, Power Automate, SharePoint и Power BI для автоматизации контроля и документального аудита по ISO/IEC 27001:2022 вместо процесса на таблицах.</p>
+          <div class="figures">
+            <div><b class="glow"><span class="en">1,361</span><span class="es">1.361</span><span class="ru">1 361</span></b><span class="en">evidence requests processed</span><span class="es">solicitudes de evidencia procesadas</span><span class="ru">обработано запросов доказательств</span></div>
+            <div><b class="glow"><span class="en">90.4%</span><span class="es">90,4 %</span><span class="ru">90,4 %</span></b><span class="en">delivery rate</span><span class="es">tasa de entrega</span><span class="ru">доля выполнения</span></div>
+            <div><b class="glow">9</b><span class="en">automated workflows</span><span class="es">flujos automatizados</span><span class="ru">автоматизированных процессов</span></div>
+          </div>
+          <ul class="en">
+            <li>Supported the bank's ISMS: validated audit evidence, reviewed security controls, and tracked findings and action plans with other departments.</li>
+            <li>Built Power BI models for the compliance team: Power Query cleanup, star-schema models across multiple sources, and indicator dashboards.</li>
+            <li>Worked in agile teams, gathering requirements with business areas.</li>
+          </ul>
+          <ul class="es">
+            <li>Apoyé el SGSI del banco: validé evidencias de auditoría, revisé controles de seguridad e hice seguimiento a hallazgos y planes de acción con otras áreas.</li>
+            <li>Construí modelos en Power BI para el equipo de cumplimiento: limpieza con Power Query, modelos estrella con múltiples fuentes y tableros de indicadores.</li>
+            <li>Trabajé en equipos ágiles, levantando requerimientos con las áreas de negocio.</li>
+          </ul>
+          <ul class="ru">
+            <li>Поддерживал СУИБ банка: проверял доказательства для аудита, анализировал меры безопасности, отслеживал замечания и планы действий с другими отделами.</li>
+            <li>Строил модели Power BI для команды комплаенса: очистка данных в Power Query, модели «звезда» из нескольких источников, дашборды с показателями.</li>
+            <li>Работал в agile-командах, собирал требования с бизнес-подразделениями.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= PROJECTS ======================= -->
+  <section id="projects">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span><span class="en">projects</span><span class="es">proyectos</span><span class="ru">проекты</span></h2>
+      <p class="sub"><span class="en">Things I built because I wanted to.</span><span class="es">Cosas que construí porque quise.</span><span class="ru">То, что я сделал, потому что захотелось.</span></p>
+      <div class="projects">
+        <article class="card">
+          <h3><span class="en">Security homelab</span><span class="es">Homelab de seguridad</span><span class="ru">Домашняя лаборатория безопасности</span></h3>
+          <p class="en">Proxmox VE on bare metal with an OPNsense firewall, VLAN segmentation, port and protocol rules, and VPN access. Windows and Linux VMs, a basic Active Directory, logs centralized in the ELK Stack, vulnerability scans with Nessus and OpenVAS, and testing with Kali, Metasploit, Wireshark and Nmap.</p>
+          <p class="es">Proxmox VE en bare metal con firewall OPNsense, segmentación por VLAN, reglas por puerto y protocolo y acceso VPN. VMs Windows y Linux, un Active Directory básico, logs centralizados en ELK Stack, escaneo de vulnerabilidades con Nessus y OpenVAS, y pruebas con Kali, Metasploit, Wireshark y Nmap.</p>
+          <p class="ru">Proxmox VE на голом железе с межсетевым экраном OPNsense, сегментацией VLAN, правилами по портам и протоколам и VPN-доступом. ВМ на Windows и Linux, базовый Active Directory, централизованные логи в ELK Stack, сканирование уязвимостей в Nessus и OpenVAS, тестирование с Kali, Metasploit, Wireshark и Nmap.</p>
+          <p class="stack"><b>2026</b> · Proxmox, OPNsense, ELK, Nessus, Kali</p>
+        </article>
+        <article class="card">
+          <h3><a href="https://github.com/Pidual/Photo-Deletor-Extension" target="_blank" rel="noopener">Photo-Deletor-Extension</a></h3>
+          <p class="en">A browser extension that runs an image classifier right inside Google Photos. I fine-tuned ResNet50 in PyTorch on more than 17,000 images I labeled by hand, exported it to ONNX, and made it run in the browser.</p>
+          <p class="es">Una extensión de navegador que ejecuta un clasificador de imágenes directamente en Google Photos. Hice fine-tuning de ResNet50 en PyTorch con más de 17.000 imágenes que etiqueté a mano, lo exporté a ONNX y lo puse a correr en el navegador.</p>
+          <p class="ru">Расширение для браузера, которое запускает классификатор изображений прямо в Google Photos. Дообучил ResNet50 на PyTorch на более чем 17 000 изображений, размеченных вручную, экспортировал в ONNX и запустил в браузере.</p>
+          <p class="stack"><b>2026</b> · PyTorch, CUDA, ONNX, JavaScript</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">E-commerce backend</span><span class="es">Backend de e-commerce</span><span class="ru">Бэкенд интернет-магазина</span></h3>
+          <p class="en">REST API with JWT authentication, product catalog, cart and orders.</p>
+          <p class="es">API REST con autenticación JWT, catálogo de productos, carrito y pedidos.</p>
+          <p class="ru">REST API с JWT-аутентификацией, каталогом товаров, корзиной и заказами.</p>
+          <p class="stack"><b>2024</b> · Java, Spring Boot, JWT</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">1st place, UPTC Hackathon</span><span class="es">1.er puesto, Hackatón UPTC</span><span class="ru">1-е место, хакатон UPTC</span></h3>
+          <p class="en">Won the hackathon at Universidad Pedagógica y Tecnológica de Colombia.</p>
+          <p class="es">Gané la hackatón de la Universidad Pedagógica y Tecnológica de Colombia.</p>
+          <p class="ru">Победа на хакатоне Педагогического и технологического университета Колумбии (UPTC).</p>
+          <p class="stack"><b><span class="en">May 2026</span><span class="es">may 2026</span><span class="ru">май 2026</span></b> · <span class="en">award</span><span class="es">premio</span><span class="ru">награда</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CERTIFICATIONS ======================= -->
+  <section id="certifications">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span>certs</h2>
+      <p class="sub"><span class="en">With links, because evidence is kind of my thing.</span><span class="es">Con enlaces, porque las evidencias son lo mío.</span><span class="ru">Со ссылками — доказательства это моя профессия.</span></p>
+      <div class="card">
+        <table class="certs">
+          <thead><tr>
+            <th><span class="en">certification</span><span class="es">certificación</span><span class="ru">сертификат</span></th>
+            <th><span class="en">issuer</span><span class="es">emisor</span><span class="ru">кем выдан</span></th>
+            <th><span class="en">date</span><span class="es">fecha</span><span class="ru">дата</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><a href="https://www.credly.com/badges/485adf76-e28e-4540-8a77-276ecb24b6d0/linked_in_profile" target="_blank" rel="noopener">Security+ ce (SY0-701)</a></td><td>CompTIA</td><td class="when"><span class="en">Jun 2026</span><span class="es">jun 2026</span><span class="ru">июн 2026</span></td></tr>
+            <tr><td><span class="en">Cloud Platform Engineer Program, AWS (39 labs, 2nd place)</span><span class="es">Cloud Platform Engineer Program, AWS (39 labs, 2.º puesto)</span><span class="ru">Cloud Platform Engineer Program, AWS (39 лабораторных, 2-е место)</span></td><td>EPAM Cloud Mentor University</td><td class="when"><span class="en">expected Dec 2026</span><span class="es">esperado dic 2026</span><span class="ru">ожидается дек 2026</span></td></tr>
+            <tr><td><a href="https://www.coursera.org/account/accomplishments/specialization/8HCZD7Y1AMZC" target="_blank" rel="noopener">Deep Learning Specialization</a></td><td>DeepLearning.AI</td><td class="when"><span class="en">Nov 2025</span><span class="es">nov 2025</span><span class="ru">ноя 2025</span></td></tr>
+            <tr><td><a href="https://www.freecodecamp.org/certification/Pidual/back-end-development-and-apis" target="_blank" rel="noopener">Back End Development and APIs</a></td><td>freeCodeCamp</td><td class="when"><span class="en">Dec 2024</span><span class="es">dic 2024</span><span class="ru">дек 2024</span></td></tr>
+            <tr><td>Foundation Level Threat Intelligence Analyst</td><td>arcX</td><td class="when"><span class="en">Nov 2024</span><span class="es">nov 2024</span><span class="ru">ноя 2024</span></td></tr>
+            <tr><td><a href="https://cert.efset.org/en/hzQH9H" target="_blank" rel="noopener">EF SET English, 75/100 (C2)</a></td><td>EF</td><td class="when"><span class="en">Nov 2024</span><span class="es">nov 2024</span><span class="ru">ноя 2024</span></td></tr>
+          </tbody>
+        </table>
+        <p class="degree"><span class="en">B.Sc. Systems and Computer Engineering, Universidad Pedagógica y Tecnológica de Colombia, 2026.</span><span class="es">Ingeniero de Sistemas y Computación, Universidad Pedagógica y Tecnológica de Colombia, 2026.</span><span class="ru">Бакалавр, системная и компьютерная инженерия, Педагогический и технологический университет Колумбии (UPTC), 2026.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= TOOLBOX ======================= -->
+  <section id="skills">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span><span class="en">toolbox</span><span class="es">herramientas</span><span class="ru">инструменты</span></h2>
+      <div class="card skills">
+        <div>
+          <h3><span class="en">Security &amp; GRC</span><span class="es">Seguridad y GRC</span><span class="ru">Безопасность и GRC</span></h3>
+          <ul class="tags"><li>ISO/IEC 27001:2022</li><li>SOC 2</li><li>Vanta</li><li><span class="en">Evidence management</span><span class="es">Gestión de evidencias</span><span class="ru">Управление доказательствами</span></li><li><span class="en">Policy writing</span><span class="es">Redacción de políticas</span><span class="ru">Политики ИБ</span></li><li><span class="en">Audit support</span><span class="es">Apoyo a auditorías</span><span class="ru">Поддержка аудитов</span></li><li><span class="en">Security questionnaires</span><span class="es">Cuestionarios de seguridad</span><span class="ru">Опросники по безопасности</span></li><li>Nessus</li><li>OpenVAS</li><li>Wireshark</li><li>Nmap</li><li>Burp Suite</li><li>ELK Stack</li></ul>
+        </div>
+        <div>
+          <h3><span class="en">Cloud</span><span class="es">Nube</span><span class="ru">Облако</span></h3>
+          <ul class="tags"><li>AWS IAM</li><li>VPC</li><li>EC2</li><li>S3 + KMS</li><li>Lambda</li><li>RDS</li><li>DynamoDB</li><li>ECS</li><li>CloudFormation</li><li>CloudWatch</li><li>Terraform</li></ul>
+        </div>
+        <div>
+          <h3><span class="en">Automation &amp; data</span><span class="es">Automatización y datos</span><span class="ru">Автоматизация и данные</span></h3>
+          <ul class="tags"><li>Power Apps</li><li>Power Automate</li><li>Power BI</li><li>SharePoint</li><li>Python</li><li>SQL</li><li>PyTorch</li><li>ONNX</li></ul>
+        </div>
+        <div>
+          <h3><span class="en">Dev &amp; systems</span><span class="es">Desarrollo y sistemas</span><span class="ru">Разработка и системы</span></h3>
+          <ul class="tags"><li>Java / Spring Boot</li><li>JavaScript / TypeScript</li><li>React</li><li>Node.js</li><li>PostgreSQL</li><li>Docker</li><li>Linux</li><li>Proxmox</li><li>Git</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= BATTLESTATION ======================= -->
+  <section id="rig">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span>battlestation</h2>
+      <p class="sub"><span class="en">The machine behind the rice. Also where the games happen.</span><span class="es">La máquina detrás del rice. También donde pasan los juegos.</span><span class="ru">Машина, на которой держится райс. И где проходят игры.</span></p>
+      <div class="rig">
+        <div class="term">
+          <div class="tbar"><i></i><i></i><i></i><span>~ — lshw -short</span></div>
+<pre class="tree"><span class="root">battlestation</span>
+<span class="row"><span class="br">├── </span><span class="k">cpu</span>     AMD Ryzen 7 7800X3D</span>
+<span class="row"><span class="br">├── </span><span class="k">cooler</span>  Thermalright Peerless Assassin 120 SE</span>
+<span class="row"><span class="br">├── </span><span class="k">board</span>   Gigabyte B650 EAGLE AX (AM5)</span>
+<span class="row"><span class="br">├── </span><span class="k">ram</span>     32 GB Crucial Pro DDR5-6000 CL36 (2×16 GB)</span>
+<span class="row"><span class="br">├── </span><span class="k">ssd</span>     PNY CS2241, 1 TB NVMe PCIe 4.0</span>
+<span class="row"><span class="br">├── </span><span class="k">gpu</span>     PNY GeForce RTX 5070 (12 GB)</span>
+<span class="row"><span class="br">├── </span><span class="k">display</span> MSI MAG 271QPX QD-OLED 27", 2560×1440, 240 Hz</span>
+<span class="row"><span class="br">├── </span><span class="k">case</span>    GAMDIAS AURA GC2 ELITE</span>
+<span class="row"><span class="br">└── </span><span class="k">psu</span>     MSI MAG A750GL, 750 W 80+ Gold</span></pre>
+        </div>
+
+        <div class="card steam">
+          <h3>Steam <span style="color:var(--dim);font-weight:400">/ Pidual</span></h3>
+          <div class="stats">
+            <div><b class="glow">46</b><span class="en">level</span><span class="es">nivel</span><span class="ru">уровень</span></div>
+            <div><b class="glow">181</b><span class="en">games</span><span class="es">juegos</span><span class="ru">игр</span></div>
+            <div><b class="glow">372h</b><span>Deadlock</span></div>
+          </div>
+          <p class="np"><span class="en">Main:</span><span class="es">Main:</span><span class="ru">Мейн:</span> <b>Deadlock</b>. <span class="en">Also on rotation: NieR:Automata, Dark Souls III.</span><span class="es">También en rotación: NieR:Automata, Dark Souls III.</span><span class="ru">Также в ротации: NieR:Automata, Dark Souls III.</span></p>
+          <a class="btn" href="https://steamcommunity.com/id/Spidual/" target="_blank" rel="noopener"><span class="en">./add_me_on_steam</span><span class="es">./agrégame_en_steam</span><span class="ru">./добавь_в_steam</span></a>
+          <p class="asof"><span class="en">stats as of Oct 2026</span><span class="es">datos a oct 2026</span><span class="ru">данные на окт 2026</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= SHELL ======================= -->
+  <section id="shell">
+    <div class="wrap">
+      <h2 class="glow"><span class="p">~/</span>shell</h2>
+      <p class="sub"><span class="en">A real (tiny) terminal. Go ahead, type something.</span><span class="es">Una terminal de verdad (chiquita). Dale, escribe algo.</span><span class="ru">Настоящий (маленький) терминал. Давай, напиши что-нибудь.</span></p>
+      <div class="term shell">
+        <div class="tbar"><i></i><i></i><i></i><span>visitor@pidual — zsh</span></div>
+        <div class="out" id="out" aria-live="polite"></div>
+        <form id="sh" autocomplete="off">
+          <label for="cmd">visitor@pidual:~$</label>
+          <input id="cmd" type="text" spellcheck="false" autocapitalize="off" aria-label="Command">
+        </form>
+        <div class="chips" id="chips">
+          <button type="button">help</button><button type="button">whoami</button><button type="button">specs</button><button type="button">theme gruvbox</button><button type="button">sudo hire carlos</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CONTACT ======================= -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <h2 class="glow"><span class="en">Need someone who actually likes audits? Rare. Let's talk.</span><span class="es">¿Necesitas a alguien a quien de verdad le gusten las auditorías? Raro. Hablemos.</span><span class="ru">Нужен человек, который правда любит аудиты? Редкость. Давайте поговорим.</span></h2>
+      <p class="en">Looking for long-term roles in security and compliance. Remote preferred; hybrid or on-site anywhere in Colombia works too. Native Spanish, C2 English.</p>
+      <p class="es">Busco roles de largo plazo en seguridad y cumplimiento. Prefiero remoto; híbrido o presencial en cualquier ciudad de Colombia también funciona. Español nativo, inglés C2.</p>
+      <p class="ru">Ищу долгосрочную работу в сфере безопасности и комплаенса. Предпочитаю удалёнку, но гибрид или офис в любом городе Колумбии тоже подходит. Испанский — родной, английский — C2.</p>
+      <div class="btns">
+        <a class="btn primary" href="mailto:carlosmapache1@gmail.com">carlosmapache1@gmail.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/carloslozanoperez/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Pidual" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://steamcommunity.com/id/Spidual/" target="_blank" rel="noopener">Steam</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span class="en">Carlos Hernando Lozano Pérez · Yopal, Colombia · no pills were harmed in the making of this site</span><span class="es">Carlos Hernando Lozano Pérez · Yopal, Colombia · ninguna pastilla salió herida en la creación de este sitio</span><span class="ru">Карлос Эрнандо Лосано Перес · Йопаль, Колумбия · при создании сайта ни одна таблетка не пострадала</span></div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  /* ================= THEMES ================= */
+  var THEMES = {
+    matrix:     { bg:'#010803', panel:'2,18,7',    accent:'#3dff7a', text:'#b9f5c9', dim:'#4f9c64', line:'#0f4a22', face:'#ff9a1f', red:'#ff5c5c', blue:'#6fd6ff', head:'#d8ffe4' },
+    gruvbox:    { bg:'#1d2021', panel:'40,40,40',  accent:'#b8bb26', text:'#ebdbb2', dim:'#928374', line:'#3c3836', face:'#fe8019', red:'#fb4934', blue:'#83a598', head:'#fbf1c7' },
+    catppuccin: { bg:'#11111b', panel:'30,30,46',  accent:'#cba6f7', text:'#cdd6f4', dim:'#7f849c', line:'#313244', face:'#fab387', red:'#f38ba8', blue:'#89b4fa', head:'#f5e0dc' },
+    nord:       { bg:'#242933', panel:'46,52,64',  accent:'#88c0d0', text:'#e5e9f0', dim:'#7b88a1', line:'#3b4252', face:'#d08770', red:'#bf616a', blue:'#81a1c1', head:'#eceff4' },
+    tokyonight: { bg:'#16161e', panel:'26,27,38',  accent:'#7aa2f7', text:'#c0caf5', dim:'#565f89', line:'#292e42', face:'#ff9e64', red:'#f7768e', blue:'#7dcfff', head:'#e0e7ff' }
+  };
+  var themeNames = Object.keys(THEMES), theme = 'matrix';
+  function hexRgb(h) { h = h.replace('#',''); return [0,2,4].map(function (i) { return parseInt(h.substr(i,2),16); }).join(','); }
+  function setTheme(name) {
+    if (!THEMES[name]) return false;
+    theme = name; var t = THEMES[name], s = root.style;
+    s.setProperty('--bg', t.bg); s.setProperty('--panel', 'rgba(' + t.panel + ',.86)');
+    s.setProperty('--green', t.accent); s.setProperty('--text', t.text); s.setProperty('--dim', t.dim);
+    s.setProperty('--line', t.line); s.setProperty('--orange', t.face); s.setProperty('--red', t.red); s.setProperty('--blue', t.blue);
+    document.getElementById('themeName').textContent = name;
+    document.getElementById('fetchTheme').textContent = name;
+    var sw = document.getElementById('swatches'); sw.innerHTML = '';
+    [t.bg, t.red, t.accent, t.face, t.blue, t.dim, t.line, t.text].forEach(function (c) { var e = document.createElement('span'); e.style.background = c; sw.appendChild(e); });
+    if (rain) rain.recolor();
+    store('theme', name); return true;
+  }
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    setTheme(themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]);
+  });
+
+  /* ================= LANGUAGE ================= */
+  var lang = 'en';
+  var langButtons = document.querySelectorAll('.lang button');
+  function setLang(l) {
+    if (['en','es','ru'].indexOf(l) < 0) return false;
+    lang = l; root.lang = l;
+    langButtons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === l)); });
+    store('lang', l); updateMood(); tick(); return true;
+  }
+  langButtons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
+
+  /* ================= CLOCK ================= */
+  var LOCALES = { en: 'en-US', es: 'es-CO', ru: 'ru-RU' };
+  function tick() {
+    try {
+      document.getElementById('clock').textContent = new Intl.DateTimeFormat(LOCALES[lang], {
+        timeZone: 'America/Bogota', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+      }).format(new Date());
+    } catch (e) {}
+  }
+  setInterval(tick, 15000);
+
+  /* ================= WORKSPACES ================= */
+  var wsLinks = document.querySelectorAll('#ws a');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        wsLinks.forEach(function (a) { a.classList.toggle('on', a.dataset.sec === en.target.id); });
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    wsLinks.forEach(function (a) { var el = document.getElementById(a.dataset.sec); if (el) io.observe(el); });
+  }
+  wsLinks[0].classList.add('on');
+
+  /* ================= MASCOT ================= */
+  var MOODS = [
+    { eye: 'O', en: 'focused',     es: 'concentrado',     ru: 'сосредоточен' },
+    { eye: '^', en: 'happy',       es: 'feliz',           ru: 'доволен' },
+    { eye: '$', en: 'hired?',      es: '¿contratado?',    ru: 'нанят?' },
+    { eye: '@', en: 'caffeinated', es: 'cafeinado',       ru: 'на кофеине' },
+    { eye: 'x', en: 'post-audit',  es: 'post-auditoría',  ru: 'после аудита' },
+    { eye: '>', en: 'in a ranked match', es: 'en partida', ru: 'в рейтинговом матче' }
+  ];
+  var moodIx = 0, eyes = document.querySelectorAll('#face .eye');
+  function updateMood() {
+    var m = MOODS[moodIx];
+    eyes.forEach(function (e) { e.textContent = m.eye; });
+    document.getElementById('mood').textContent = m[lang];
+  }
+  function nextMood() { moodIx = (moodIx + 1) % MOODS.length; updateMood(); }
+  var face = document.getElementById('face');
+  face.addEventListener('click', nextMood);
+  face.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextMood(); } });
+  if (!reduce) {
+    setInterval(function () {
+      eyes.forEach(function (e) { e.textContent = '-'; });
+      setTimeout(function () { eyes.forEach(function (e) { e.textContent = MOODS[moodIx].eye; }); }, 160);
+    }, 3800);
+  }
+
+  /* ================= RAIN ================= */
+  var rain = (function () {
+    var c = document.getElementById('rain'), x = c.getContext('2d');
+    var glyphs = 'アイウエオカキクケコサシスセソタチツテトナニヌネハヒフヘホマミムメモヤユヨラリルレロワン0123456789ДЖЗИЛФЦЧШЩЫЭЮЯБГÑ$#<>/{}=';
+    var fs = 16, cols = 0, drops = [], fade = '', col = '', head = '', on = true, timer = null;
+    function recolor() {
+      var t = THEMES[theme]; fade = 'rgba(' + hexRgb(t.bg) + ',0.09)'; col = t.accent; head = t.head;
+      x.fillStyle = t.bg; x.fillRect(0, 0, c.width, c.height);
+      if (reduce || !on) staticFrame();
+    }
+    function resize() {
+      c.width = innerWidth; c.height = innerHeight; cols = Math.ceil(c.width / fs);
+      drops = Array.from({ length: cols }, function () { return Math.random() * -60; });
+      recolor();
+    }
+    function frame() {
+      x.fillStyle = fade; x.fillRect(0, 0, c.width, c.height);
+      x.font = fs + 'px "JetBrains Mono", monospace';
+      for (var i = 0; i < cols; i++) {
+        var y = drops[i] * fs;
+        x.fillStyle = Math.random() > .975 ? head : col;
+        x.fillText(glyphs[(Math.random() * glyphs.length) | 0], i * fs, y);
+        if (y > c.height && Math.random() > .975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    function staticFrame() { if (reduce) for (var k = 0; k < 40; k++) frame(); }
+    function start() { stop(); if (!reduce && on && !document.hidden) timer = setInterval(frame, 55); }
+    function stop() { if (timer) clearInterval(timer); timer = null; }
+    function toggle() { on = !on; root.classList.toggle('norain', !on); store('rain', on ? '1' : '0'); on ? start() : stop(); return on; }
+    function setOn(v) { if (v !== on) toggle(); }
+    addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', start);
+    return { resize: resize, recolor: recolor, start: start, toggle: toggle, setOn: setOn };
+  })();
+
+  /* ================= TYPED PROMPT ================= */
+  var typed = document.getElementById('typed'), first = 'whoami';
+  if (reduce) { typed.textContent = first; typed.classList.add('done'); }
+  else {
+    var n = 0;
+    setTimeout(function step() {
+      typed.textContent = first.slice(0, ++n);
+      if (n < first.length) setTimeout(step, 110); else setTimeout(function () { typed.classList.add('done'); }, 600);
+    }, 400);
+  }
+
+  /* ================= SHELL ================= */
+  var T = {
+    en: {
+      welcome: "Welcome to pidual-shell. Type 'help' to see what it can do.",
+      help: [['help','show this list'],['whoami','who is this guy'],['about','the short version'],['ls','list files'],['cat <file>','read a file'],['specs','the battlestation'],['steam','add me, let\'s play'],['fetch','back to the rice'],['theme [name]', themeNames.join(' | ')],['lang [code]','en | es | ru'],['matrix','toggle the rain'],['contact','how to reach me'],['clear','clear the screen'],['sudo hire carlos','you know you want to']],
+      whoami: 'Carlos Lozano. Information Security Analyst. ISO 27001, SOC 2, Security+. Yopal, Colombia.',
+      about: 'Systems and Computer Engineer (UPTC). Built SGSI+ at Banco de Bogotá, now doing SOC 2 + ISO 27001 at Profound. Homelab enjoyer, Deadlock enjoyer.',
+      secrets: 'Permission denied. Least privilege, friend.',
+      nofile: 'No such file:',
+      fetch: 'Scrolling up to the rice...',
+      steam: 'Opening Steam profile: Pidual (lvl 46, 181 games)...',
+      themeSet: 'Theme set to', themeBad: 'Unknown theme. Try:', themeNow: 'Current theme:',
+      langSet: 'Language set to English.', langBad: 'Unknown language. Try: en | es | ru',
+      rainOn: 'Rain on.', rainOff: 'Rain off. The simulation looks suspiciously normal.',
+      sudoNo: 'visitor is not in the sudoers file. This incident will be reported.',
+      hire: '[sudo] password for recruiter: ********\nAccess granted. Opening your mail client...',
+      rm: 'Nice try. ISO 27001 control A.8.13 says we have backups.',
+      exit: 'There is no exit. Only more audits.',
+      notfound: 'command not found:', hint: "(try 'help')"
+    },
+    es: {
+      welcome: "Bienvenido a pidual-shell. Escribe 'help' para ver lo que puede hacer.",
+      help: [['help','muestra esta lista'],['whoami','quién es este man'],['about','la versión corta'],['ls','lista archivos'],['cat <archivo>','lee un archivo'],['specs','el setup'],['steam','agrégame y jugamos'],['fetch','volver al rice'],['theme [nombre]', themeNames.join(' | ')],['lang [código]','en | es | ru'],['matrix','activa/desactiva la lluvia'],['contact','cómo contactarme'],['clear','limpia la pantalla'],['sudo hire carlos','sabes que quieres']],
+      whoami: 'Carlos Lozano. Analista de Seguridad de la Información. ISO 27001, SOC 2, Security+. Yopal, Colombia.',
+      about: 'Ingeniero de Sistemas y Computación (UPTC). Construí SGSI+ en el Banco de Bogotá y ahora trabajo SOC 2 + ISO 27001 en Profound. Fan de los homelabs y de Deadlock.',
+      secrets: 'Permiso denegado. Mínimo privilegio, parce.',
+      nofile: 'No existe el archivo:',
+      fetch: 'Subiendo al rice...',
+      steam: 'Abriendo perfil de Steam: Pidual (nivel 46, 181 juegos)...',
+      themeSet: 'Tema cambiado a', themeBad: 'Tema desconocido. Prueba:', themeNow: 'Tema actual:',
+      langSet: 'Idioma cambiado a español.', langBad: 'Idioma desconocido. Prueba: en | es | ru',
+      rainOn: 'Lluvia activada.', rainOff: 'Lluvia desactivada. La simulación se ve sospechosamente normal.',
+      sudoNo: 'visitor no está en el archivo sudoers. Este incidente será reportado.',
+      hire: '[sudo] contraseña para reclutador: ********\nAcceso concedido. Abriendo tu correo...',
+      rm: 'Buen intento. El control A.8.13 de ISO 27001 dice que tenemos backups.',
+      exit: 'No hay salida. Solo más auditorías.',
+      notfound: 'comando no encontrado:', hint: "(prueba 'help')"
+    },
+    ru: {
+      welcome: "Добро пожаловать в pidual-shell. Введите 'help', чтобы увидеть команды.",
+      help: [['help','показать этот список'],['whoami','кто этот парень'],['about','краткая версия'],['ls','список файлов'],['cat <файл>','прочитать файл'],['specs','железо'],['steam','добавь меня, поиграем'],['fetch','назад к райсу'],['theme [имя]', themeNames.join(' | ')],['lang [код]','en | es | ru'],['matrix','включить/выключить дождь'],['contact','как со мной связаться'],['clear','очистить экран'],['sudo hire carlos','ты знаешь, что хочешь']],
+      whoami: 'Карлос Лосано. Аналитик по информационной безопасности. ISO 27001, SOC 2, Security+. Йопаль, Колумбия.',
+      about: 'Инженер по системам и вычислительной технике (UPTC). Создал SGSI+ в Banco de Bogotá, сейчас занимаюсь SOC 2 + ISO 27001 в Profound. Фанат домашних лабораторий и Deadlock.',
+      secrets: 'Доступ запрещён. Принцип минимальных привилегий, друг.',
+      nofile: 'Нет такого файла:',
+      fetch: 'Прокручиваю наверх к райсу...',
+      steam: 'Открываю профиль Steam: Pidual (уровень 46, 181 игра)...',
+      themeSet: 'Тема изменена на', themeBad: 'Неизвестная тема. Варианты:', themeNow: 'Текущая тема:',
+      langSet: 'Язык изменён на русский.', langBad: 'Неизвестный язык. Варианты: en | es | ru',
+      rainOn: 'Дождь включён.', rainOff: 'Дождь выключен. Симуляция выглядит подозрительно нормально.',
+      sudoNo: 'visitor отсутствует в файле sudoers. Об этом инциденте будет сообщено.',
+      hire: '[sudo] пароль для рекрутера: ********\nДоступ разрешён. Открываю почтовый клиент...',
+      rm: 'Хорошая попытка. Контроль A.8.13 ISO 27001 говорит, что у нас есть бэкапы.',
+      exit: 'Выхода нет. Только новые аудиты.',
+      notfound: 'команда не найдена:', hint: "(попробуйте 'help')"
+    }
+  };
+  var SPECS = [
+    'cpu      AMD Ryzen 7 7800X3D', 'cooler   Thermalright Peerless Assassin 120 SE', 'board    Gigabyte B650 EAGLE AX (AM5)',
+    'ram      32 GB Crucial Pro DDR5-6000 CL36', 'ssd      PNY CS2241 1 TB NVMe PCIe 4.0', 'gpu      PNY GeForce RTX 5070 12 GB',
+    'display  MSI MAG 271QPX QD-OLED 27" 1440p 240 Hz', 'case     GAMDIAS AURA GC2 ELITE', 'psu      MSI MAG A750GL 750 W 80+ Gold'
+  ].join('\n');
+  var CONTACT = 'email     carlosmapache1@gmail.com\nlinkedin  linkedin.com/in/carloslozanoperez\ngithub    github.com/Pidual\nsteam     steamcommunity.com/id/Spidual';
+
+  var out = document.getElementById('out'), input = document.getElementById('cmd'), hist = [], hIx = 0;
+  function print(text, cls) {
+    var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text;
+    out.appendChild(d); out.scrollTop = out.scrollHeight;
+  }
+  function go(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }
+
+  function run(raw) {
+    var line = raw.trim(); print('visitor@pidual:~$ ' + line, 'cmd');
+    if (!line) return;
+    hist.push(line); hIx = hist.length;
+    var L = T[lang], parts = line.split(/\s+/), c = parts[0].toLowerCase(), arg = (parts[1] || '').toLowerCase();
+    if (/^sudo\s+hire\s+carlos/i.test(line)) { print(L.hire, 'note'); setTimeout(function () { location.href = 'mailto:carlosmapache1@gmail.com?subject=Hi%20Carlos'; }, 900); return; }
+    if (/^rm\s+-rf/i.test(line)) { print(L.rm, 'err'); return; }
+    switch (c) {
+      case 'help': L.help.forEach(function (h) { print((h[0] + '                  ').slice(0, 18) + h[1]); }); break;
+      case 'whoami': print(L.whoami); break;
+      case 'about': print(L.about); break;
+      case 'ls': print('about.txt  contact.txt  specs.txt  projects/  certs/  .secrets'); break;
+      case 'cat':
+        if (arg === 'about.txt') print(L.about);
+        else if (arg === 'contact.txt') print(CONTACT);
+        else if (arg === 'specs.txt') print(SPECS);
+        else if (arg === '.secrets') print(L.secrets, 'err');
+        else print(L.nofile + ' ' + (parts[1] || ''), 'err');
+        break;
+      case 'cd':
+        var map = { 'projects': 'projects', 'projects/': 'projects', 'certs': 'certifications', 'certs/': 'certifications', '~': 'top', '..': 'top' };
+        if (map[arg]) go(map[arg]); else print(L.nofile + ' ' + (parts[1] || ''), 'err');
+        break;
+      case 'specs': case 'neofetch-rig': print(SPECS); break;
+      case 'steam': print(L.steam, 'note'); window.open('https://steamcommunity.com/id/Spidual/', '_blank', 'noopener'); break;
+      case 'fetch': case 'neofetch': case 'fastfetch': print(L.fetch, 'note'); go('top'); break;
+      case 'theme':
+        if (!arg) print(L.themeNow + ' ' + theme + '\n' + themeNames.join(' | '));
+        else if (setTheme(arg)) print(L.themeSet + ' ' + arg + '.', 'note');
+        else print(L.themeBad + ' ' + themeNames.join(' | '), 'err');
+        break;
+      case 'lang':
+        if (setLang(arg)) print(T[lang].langSet, 'note'); else print(L.langBad, 'err');
+        break;
+      case 'matrix': print(rain.toggle() ? L.rainOn : L.rainOff, 'note'); break;
+      case 'contact': print(CONTACT); break;
+      case 'clear': out.innerHTML = ''; break;
+      case 'sudo': print(L.sudoNo, 'err'); break;
+      case 'exit': case 'logout': print(L.exit, 'note'); break;
+      case 'echo': print(line.slice(5)); break;
+      case 'date': print(document.getElementById('clock').textContent); break;
+      default: print(L.notfound + ' ' + c + '  ' + L.hint, 'err');
+    }
+  }
+  document.getElementById('sh').addEventListener('submit', function (e) { e.preventDefault(); run(input.value); input.value = ''; });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp' && hIx > 0) { hIx--; input.value = hist[hIx]; e.preventDefault(); }
+    else if (e.key === 'ArrowDown') { hIx = Math.min(hist.length, hIx + 1); input.value = hist[hIx] || ''; e.preventDefault(); }
+  });
+  document.querySelectorAll('#chips button').forEach(function (b) { b.addEventListener('click', function () { run(b.textContent); input.focus({ preventScroll: true }); }); });
+
+  /* ================= BOOT ================= */
+  var savedLang = load('lang'), nav = (navigator.language || '').toLowerCase();
+  setLang(savedLang || (nav.indexOf('es') === 0 ? 'es' : nav.indexOf('ru') === 0 ? 'ru' : 'en'));
+  rain.resize();
+  setTheme(THEMES[load('theme')] ? load('theme') : 'matrix');
+  if (load('rain') === '0') rain.toggle();
+  rain.start();
+  print(T[lang].welcome, 'note');
+})();
+</script>
+</body>
+</html>
