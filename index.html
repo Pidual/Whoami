@@ -12,15 +12,15 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #010803;
-    --panel: rgba(2, 18, 7, .86);
-    --green: #3dff7a;
-    --text: #b9f5c9;
-    --dim: #4f9c64;
-    --line: #0f4a22;
-    --orange: #ff9a1f;
-    --red: #ff5c5c;
-    --blue: #6fd6ff;
+    --bg: #16161e;
+    --panel: rgba(26, 27, 38, .86);
+    --green: #7aa2f7;
+    --text: #c0caf5;
+    --dim: #565f89;
+    --line: #292e42;
+    --orange: #ff9e64;
+    --red: #f7768e;
+    --blue: #7dcfff;
     --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
@@ -228,7 +228,7 @@
     <div class="mid" aria-live="off"><span id="clock">--:--</span> <span class="dot">●</span> Yopal, CO</div>
     <div class="mod">
       <div class="cava" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <button class="pill" id="themeBtn" type="button" aria-label="Change color theme">󰏘 <span class="tn" id="themeName">matrix</span></button>
+      <button class="pill" id="themeBtn" type="button" aria-label="Change color theme">◐ <span class="tn" id="themeName">tokyonight</span></button>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="es" aria-pressed="false">ES</button>
@@ -280,7 +280,7 @@
 <span class="k">GPU</span>:     GeForce RTX 5070 12GB
 <span class="k">Memory</span>:  32 GB DDR5-6000
 <span class="k">Display</span>: 2560x1440 @ 240Hz OLED
-<span class="k">Theme</span>:   <span id="fetchTheme">matrix</span>
+<span class="k">Theme</span>:   <span id="fetchTheme">tokyonight</span>
 <span class="k">Role</span>:    <span class="en">InfoSec Analyst</span><span class="es">Analista de Seguridad</span><span class="ru">Аналитик ИБ</span>
 <span class="k">Cert</span>:    Security+ SY0-701
 <span class="k">Mood</span>:    <span id="mood">focused</span></pre>
@@ -547,7 +547,9 @@
 </main>
 
 <footer>
-  <div class="wrap"><span class="en">Carlos Hernando Lozano Pérez · Yopal, Colombia · no pills were harmed in the making of this site</span><span class="es">Carlos Hernando Lozano Pérez · Yopal, Colombia · ninguna pastilla salió herida en la creación de este sitio</span><span class="ru">Карлос Эрнандо Лосано Перес · Йопаль, Колумбия · при создании сайта ни одна таблетка не пострадала</span></div>
+  <div class="wrap">
+    <p style="margin:0 0 6px"><span class="en">Full disclosure: this site was vibecoded with Claude. I'm a security guy, not an HTML god. I wrote the content and the vibes; the AI wrote the CSS.</span><span class="es">Para ser honesto: este sitio lo hice vibecodeando con Claude. Soy de seguridad, no un dios del HTML. Yo puse el contenido y el estilo; la IA escribió el CSS.</span><span class="ru">Честно: этот сайт навайбкожен с Claude. Я безопасник, а не бог HTML. Контент и вайб мои, CSS писал ИИ.</span></p>
+    <span class="en">Carlos Hernando Lozano Pérez · Yopal, Colombia · no pills were harmed in the making of this site</span><span class="es">Carlos Hernando Lozano Pérez · Yopal, Colombia · ninguna pastilla salió herida en la creación de este sitio</span><span class="ru">Карлос Эрнандо Лосано Перес · Йопаль, Колумбия · при создании сайта ни одна таблетка не пострадала</span></div>
 </footer>
 
 <script>
@@ -565,7 +567,7 @@
     nord:       { bg:'#242933', panel:'46,52,64',  accent:'#88c0d0', text:'#e5e9f0', dim:'#7b88a1', line:'#3b4252', face:'#d08770', red:'#bf616a', blue:'#81a1c1', head:'#eceff4' },
     tokyonight: { bg:'#16161e', panel:'26,27,38',  accent:'#7aa2f7', text:'#c0caf5', dim:'#565f89', line:'#292e42', face:'#ff9e64', red:'#f7768e', blue:'#7dcfff', head:'#e0e7ff' }
   };
-  var themeNames = Object.keys(THEMES), theme = 'matrix';
+  var themeNames = Object.keys(THEMES), theme = 'tokyonight';
   function hexRgb(h) { h = h.replace('#',''); return [0,2,4].map(function (i) { return parseInt(h.substr(i,2),16); }).join(','); }
   function setTheme(name) {
     if (!THEMES[name]) return false;
@@ -696,7 +698,7 @@
   var T = {
     en: {
       welcome: "Welcome to pidual-shell. Type 'help' to see what it can do.",
-      help: [['help','show this list'],['whoami','who is this guy'],['about','the short version'],['ls','list files'],['cat <file>','read a file'],['specs','the battlestation'],['steam','add me, let\'s play'],['fetch','back to the rice'],['theme [name]', themeNames.join(' | ')],['lang [code]','en | es | ru'],['matrix','toggle the rain'],['contact','how to reach me'],['clear','clear the screen'],['sudo hire carlos','you know you want to']],
+      help: [['help','show this list'],['whoami','who is this guy'],['about','the short version'],['ls','list files'],['cat <file>','read a file'],['specs','the battlestation'],['steam','add me, let\'s play'],['fetch','back to the rice'],['theme [name]', themeNames.join(' | ')],['lang [code]','en | es | ru'],['matrix','toggle the rain'],['contact','how to reach me'],['credits','who actually wrote this'],['clear','clear the screen'],['sudo hire carlos','you know you want to']],
       whoami: 'Carlos Lozano. Information Security Analyst. ISO 27001, SOC 2, Security+. Yopal, Colombia.',
       about: 'Systems and Computer Engineer (UPTC). Built SGSI+ at Banco de Bogotá, now doing SOC 2 + ISO 27001 at Profound. Homelab enjoyer, Deadlock enjoyer.',
       secrets: 'Permission denied. Least privilege, friend.',
@@ -710,11 +712,12 @@
       hire: '[sudo] password for recruiter: ********\nAccess granted. Opening your mail client...',
       rm: 'Nice try. ISO 27001 control A.8.13 says we have backups.',
       exit: 'There is no exit. Only more audits.',
+      credits: 'Content and vibes: Carlos. Code: vibecoded with Claude (AI).\nI\'m a security guy, not an HTML god. At least I\'m transparent about it. That\'s a control too.',
       notfound: 'command not found:', hint: "(try 'help')"
     },
     es: {
       welcome: "Bienvenido a pidual-shell. Escribe 'help' para ver lo que puede hacer.",
-      help: [['help','muestra esta lista'],['whoami','quién es este man'],['about','la versión corta'],['ls','lista archivos'],['cat <archivo>','lee un archivo'],['specs','el setup'],['steam','agrégame y jugamos'],['fetch','volver al rice'],['theme [nombre]', themeNames.join(' | ')],['lang [código]','en | es | ru'],['matrix','activa/desactiva la lluvia'],['contact','cómo contactarme'],['clear','limpia la pantalla'],['sudo hire carlos','sabes que quieres']],
+      help: [['help','muestra esta lista'],['whoami','quién es este man'],['about','la versión corta'],['ls','lista archivos'],['cat <archivo>','lee un archivo'],['specs','el setup'],['steam','agrégame y jugamos'],['fetch','volver al rice'],['theme [nombre]', themeNames.join(' | ')],['lang [código]','en | es | ru'],['matrix','activa/desactiva la lluvia'],['contact','cómo contactarme'],['credits','quién escribió esto de verdad'],['clear','limpia la pantalla'],['sudo hire carlos','sabes que quieres']],
       whoami: 'Carlos Lozano. Analista de Seguridad de la Información. ISO 27001, SOC 2, Security+. Yopal, Colombia.',
       about: 'Ingeniero de Sistemas y Computación (UPTC). Construí SGSI+ en el Banco de Bogotá y ahora trabajo SOC 2 + ISO 27001 en Profound. Fan de los homelabs y de Deadlock.',
       secrets: 'Permiso denegado. Mínimo privilegio, parce.',
@@ -728,11 +731,12 @@
       hire: '[sudo] contraseña para reclutador: ********\nAcceso concedido. Abriendo tu correo...',
       rm: 'Buen intento. El control A.8.13 de ISO 27001 dice que tenemos backups.',
       exit: 'No hay salida. Solo más auditorías.',
+      credits: 'Contenido y estilo: Carlos. Código: vibecodeado con Claude (IA).\nSoy de seguridad, no un dios del HTML. Al menos soy transparente. Eso también es un control.',
       notfound: 'comando no encontrado:', hint: "(prueba 'help')"
     },
     ru: {
       welcome: "Добро пожаловать в pidual-shell. Введите 'help', чтобы увидеть команды.",
-      help: [['help','показать этот список'],['whoami','кто этот парень'],['about','краткая версия'],['ls','список файлов'],['cat <файл>','прочитать файл'],['specs','железо'],['steam','добавь меня, поиграем'],['fetch','назад к райсу'],['theme [имя]', themeNames.join(' | ')],['lang [код]','en | es | ru'],['matrix','включить/выключить дождь'],['contact','как со мной связаться'],['clear','очистить экран'],['sudo hire carlos','ты знаешь, что хочешь']],
+      help: [['help','показать этот список'],['whoami','кто этот парень'],['about','краткая версия'],['ls','список файлов'],['cat <файл>','прочитать файл'],['specs','железо'],['steam','добавь меня, поиграем'],['fetch','назад к райсу'],['theme [имя]', themeNames.join(' | ')],['lang [код]','en | es | ru'],['matrix','включить/выключить дождь'],['contact','как со мной связаться'],['credits','кто на самом деле это написал'],['clear','очистить экран'],['sudo hire carlos','ты знаешь, что хочешь']],
       whoami: 'Карлос Лосано. Аналитик по информационной безопасности. ISO 27001, SOC 2, Security+. Йопаль, Колумбия.',
       about: 'Инженер по системам и вычислительной технике (UPTC). Создал SGSI+ в Banco de Bogotá, сейчас занимаюсь SOC 2 + ISO 27001 в Profound. Фанат домашних лабораторий и Deadlock.',
       secrets: 'Доступ запрещён. Принцип минимальных привилегий, друг.',
@@ -746,6 +750,7 @@
       hire: '[sudo] пароль для рекрутера: ********\nДоступ разрешён. Открываю почтовый клиент...',
       rm: 'Хорошая попытка. Контроль A.8.13 ISO 27001 говорит, что у нас есть бэкапы.',
       exit: 'Выхода нет. Только новые аудиты.',
+      credits: 'Контент и вайб: Карлос. Код: навайбкожен с Claude (ИИ).\nЯ безопасник, а не бог HTML. Зато прозрачно. Это тоже контроль.',
       notfound: 'команда не найдена:', hint: "(попробуйте 'help')"
     }
   };
@@ -799,6 +804,7 @@
         break;
       case 'matrix': print(rain.toggle() ? L.rainOn : L.rainOff, 'note'); break;
       case 'contact': print(CONTACT); break;
+      case 'credits': print(L.credits, 'note'); break;
       case 'clear': out.innerHTML = ''; break;
       case 'sudo': print(L.sudoNo, 'err'); break;
       case 'exit': case 'logout': print(L.exit, 'note'); break;
@@ -818,7 +824,7 @@
   var savedLang = load('lang'), nav = (navigator.language || '').toLowerCase();
   setLang(savedLang || (nav.indexOf('es') === 0 ? 'es' : nav.indexOf('ru') === 0 ? 'ru' : 'en'));
   rain.resize();
-  setTheme(THEMES[load('theme')] ? load('theme') : 'matrix');
+  setTheme(THEMES[load('theme')] ? load('theme') : 'tokyonight');
   if (load('rain') === '0') rain.toggle();
   rain.start();
   print(T[lang].welcome, 'note');
